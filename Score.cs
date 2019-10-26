@@ -35,7 +35,6 @@ public class Score : MonoBehaviour {
         {
             AudioSource.PlayClipAtPoint(BoomSound, other.transform.position);
             Instantiate(explosion, transform.position, transform.rotation);
-            //Destroy(explosion);
             return;
         }
         score += ballValue;
@@ -50,9 +49,6 @@ public class Score : MonoBehaviour {
         {
             AudioSource.PlayClipAtPoint(BoomSound, collision.gameObject.transform.position);
             Instantiate(explosion, transform.position, transform.rotation);
-            //score -= ballValue * 1;
-            //score = score;
-            //UpdateScore();
         }
     }
     void UpdateScore ()    

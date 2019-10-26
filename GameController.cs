@@ -7,25 +7,18 @@ using UnityEngine.Events;
 public class GameController : MonoBehaviour {
     public Camera cam;
     public UnityEngine.GameObject[] balls;
-    // en este juego se trata de ver cuantas balls se cachan en un tiempo determinado
+    // en este juego se trata de ver cuantos alimentos se cachan en un tiempo determinado
     public float timeLeft;
     public Text timerText;
     public UnityEngine.GameObject gameOverText;
-   // public GameObject restartButton;
-   // public GameObject splashScreen;
-   // public GameObject startButton;
     public HatController hatController;
     public Text scoreText;
-
     public static GameController instance;
 
-    // esto solo si para probar los eventos
+    // Eventos que manejo
     public UnityEvent DamageEvent;
     public UnityEvent RepairEvent;
-    //public UnityEvent EspadaEvent;
-
- //   public Transform[] spawnPoints;
-
+    
     private bool playing;
     private float timeBefore;
 
@@ -69,16 +62,6 @@ public class GameController : MonoBehaviour {
         float ballWidth = balls[0].GetComponent<Renderer>().bounds.extents.x;
         maxWidth = targetWidth.x - ballWidth;
         timerText.text = "Tiempo restante:\n" + Mathf.RoundToInt(timeLeft);
-
-        // aqui viene una modificación. a ver si funciona que inicia el juego luego, luego
-
-       // splashScreen.SetActive(false);
-       // startButton.SetActive(false);
-        // aquí se indica a HatController que ya podemos controlar el Hat, porque ya va a iniciar el juego
-        // en HatController la función ToggleControl pone la variable canControl en true y ya
-       /* hatController.ToggleControl(true);
-        //Random.seed = System.DateTime.Now.Second;
-        StartCoroutine(Spawn());*/
     }
 
     // FixedUpdate for Physics pero tambien en un tiempo determina fijo. Aquí se decrementa la variable timeLeft
@@ -103,32 +86,17 @@ public class GameController : MonoBehaviour {
     // se quiere desactivar la SplashScreen y el startButton
     // asi como iniciar la corrutina Spawn
     // se necesita tener referencias a esas variables (que son GameObjects) y que sean públicas -se hace arriba
-    // ESTA RUTINA YA NO LA ESTOY USANDO. No, si la estoy usando
     public void StartGame()
-    {
-       // splashScreen.SetActive(false);
-       // startButton.SetActive(false);
-        // aquí se indica a HatController que ya podemos controlar el Hat, porque ya va a iniciar el juego
-        // en HatController la función ToggleControl pone la variable canControl en true y ya
-        // lo voy a poner en update()
-        
+    {   
         hatController.ToggleControl(true);
         playing = true;
-        //Random.seed = System.DateTime.Now.Second;
-        //StartCoroutine(Spawn());
-        
-
     }
-    // la rutina de Update no estaba. Estoy modificando esto.
+
     public void Update()
     {
         if (playing == false) return;
         if(Mathf.RoundToInt(timeLeft) > 0)
         {
-            /*
-            hatController.ToggleControl(true);
-            playing = true;
-            */
             if (Mathf.RoundToInt(timeLeft) != Mathf.RoundToInt(timeBefore + 0.03f))
             {
                 UnityEngine.GameObject ball = balls[Random.Range(0, balls.Length)];
@@ -142,11 +110,8 @@ public class GameController : MonoBehaviour {
         }
         else
         {
-            //gameOverText.SetActive(true);
             playing = false;
-
             GameOverHat();
-            //UIEvents.instance.LoadCroquisScene();
         }
 
     }
@@ -161,10 +126,7 @@ public class GameController : MonoBehaviour {
         playing = true;
        while (timeLeft > 0)
         {
-            // en un loop se deben generar tantas balls como se puedan y no solo una vez
-
-            // se obtiene el gameobject
-            // GameObject ball = balls[Random.Range(0, balls.Length)];
+            // en un loop se deben generar tantas balls como se puedan y no solo una ve
 
             // la position inicial de la pelota estará justo arriba del escenario
             // donde x está entre (-maxWidth, maxWidth)
@@ -186,60 +148,33 @@ public class GameController : MonoBehaviour {
         yield return new WaitForSeconds(2.0f);
         gameOverText.SetActive(true);
         yield return new WaitForSeconds(2.0f);
-
-        //restartButton.SetActive(true);
+        
         // cuando termina el tiempo se manda llamar a la escena del croquis
         UIEvents.instance.LoadCroquisScene();
     }
 
     private void GameOverHat()
     {
-        //int score;
         if (!playing)
         {
             BlackArea.Show();
-            //scoreText = GameObject.Find("TerminasteDialogHat").transform.Find("Message").GetComponent<Text>();
-           // GameObject scoreGO = GameObject.Find("TerminasteDialogHat");
-           // if (scoreGO == null) return;
-           // scoreText = scoreGO.transform.Find("Message").GetComponent<Text>();
-            //score = Score.instance.GetScoreHat();
-            /*
-            if (scoreText == null)
-            {
-                return;
-            }
-            */
-           // scoreText.text = "Total de alimentos permitidos atrapados: " + score;
             hatController.ToggleControl(false);
             hatController.DestroyHat();
-            // GameObject.Find("TerminasteDialogHat").GetComponent<Dialog>().Show(false);
             GanoOPerdio();
         }
     }
 
     private void Perdiste(int score)
     {
-        //Play level completed sound effect
-        // AudioClips.instance.PlayCompletedSFX();
-
-        //Show black area
-        //BlackArea.Show();
         TerminasteDialog.instance.SetDialog("PerdisteDialog");
         TerminasteDialog.instance.SetScore(score);
-        //GameObject.Find("PerdisteDialog").GetComponent<Dialog>().Show(false);
         Debug.Log("Perdiste");
     }
 
     private void Ganaste(int score)
     {
-        //Play level completed sound effect
-        //AudioClips.instance.PlayCompletedSFX();
-
-        //Show black area
-        // BlackArea.Show();
         TerminasteDialog.instance.SetDialog("GanasteDialog");
         TerminasteDialog.instance.SetScore(score);
-        //GameObject.Find("GanasteDialog").GetComponent<Dialog>().Show(false);
         Debug.Log("Ganaste");
     }
 
@@ -254,7 +189,7 @@ public class GameController : MonoBehaviour {
             Ganaste(score);
             // a ver si funcionan los eventos
             RepairEvent.Invoke();
-            //EspadaEvent.Invoke();
+
         }
         else
         {
@@ -263,8 +198,6 @@ public class GameController : MonoBehaviour {
             // a ver si funcionan los eventos
             DamageEvent.Invoke();
         }
-        //Show black area
-        //BlackArea.Show();
 
         Debug.Log("Gano o perdio");
     }

@@ -37,9 +37,6 @@ public class HatController : MonoBehaviour {
         {
             cam = Camera.main;
         }
-        //rb = GetComponent<Rigidbody2D>();
-        // la siguiente variable no se pone en falso, por que si no no se mueve la canasta
-        //canControl = true;
 
         // lo volví a cambiar para que empiece cuando empieza el juego, con el toggle en true
         canControl = false;
@@ -74,25 +71,8 @@ public class HatController : MonoBehaviour {
             targetPosition = new Vector3(targetWidth, targetPosition.y, targetPosition.z);
             GetComponent<Rigidbody2D>().MovePosition(targetPosition);
         }
-     /*   else
-        {
-            DestroyHat();
-        }*/
-	}
 
-  //      void FixedUpdate()
-    //{
-      //  if (canControl)
-        //{
-            // set variable x to value, which we can get from Inpunt Manager´s Horizontal axis
-          //  x = Input.GetAxis("Horizontal");
-            // calculate moving vector (left/rigth) and y value will saty unchanged
-            //move = new Vector2(x * speed, rb.velocity.y);
-            // changge Player´s velocity (move it left/right or stop)
-            //rb.velocity = move;
-        //}
-        
-   // }
+	}
 
     // se agrega una función pública que hará que conControl tome el valor que se le asigna por
     // medio de la variable de entrada
